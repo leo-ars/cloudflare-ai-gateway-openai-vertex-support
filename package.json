@@ -14,5 +14,21 @@
 		"typescript": "^5.5.2",
 		"vitest": "~3.2.0",
 		"wrangler": "^4.29.0"
+	},
+	"cloudflare": {
+		"bindings": {
+			"ACCOUNT_ID": {
+				"description": "Your **Cloudflare Account ID**. Find this in your Cloudflare dashboard sidebar."
+			},
+			"GATEWAY_ID": {
+				"description": "Your **AI Gateway name/ID**. Create one in `Workers & AI` → `AI Gateway` if you don't have one yet."
+			},
+			"VERTEX_PROJECT": {
+				"description": "**Optional**: Google Cloud project name. Only required if you plan to use Vertex AI models like `vertex/gemini-1.5-pro`."
+			},
+			"VERTEX_REGION": {
+				"description": "**Optional**: Google Cloud region (e.g., `us-east4`). Only required for Vertex AI models."
+			}
+		}
 	}
 }
