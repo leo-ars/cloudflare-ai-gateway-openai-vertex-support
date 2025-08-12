@@ -40,14 +40,58 @@ npm run dev
 npm run deploy
 ```
 
-### Usage with OpenAI SDK
+## Usage Examples
 
-Point your client at your Worker URL. For non-Vertex models use the provider-prefixed model; for Vertex use `vertex/<model>` or `google-vertex-ai/<model>`.
+### OpenAI SDK (Recommended)
 
-Examples:
-- OpenAI: `openai/gpt-4o-mini`
-- Workers AI: `workers-ai/@cf/meta/llama-3.1-8b-instruct`
-- Vertex: `vertex/gemini-1.5-pro`
+```javascript
+import OpenAI from "openai";
 
-Set `Authorization: Bearer <provider_api_key>` where for Vertex it is your Vertex API key.
+const openai = new OpenAI({
+  apiKey: "your-provider-api-key", // OpenAI, Cloudflare, or Vertex key
+  baseURL: "https://your-worker.yourname.workers.dev", // Your deployed Worker URL
+});
+
+// Non-streaming
+const response = await openai.chat.completions.create({
+  model: "workers-ai/@cf/meta/llama-3.1-8b-instruct", // or openai/gpt-4o-mini, vertex/gemini-1.5-pro
+  messages: [{ role: "user", content: "Hello!" }],
+  temperature: 0.2,
+});
+
+console.log(response.choices[0].message.content);
+
+// Streaming
+const stream = await openai.chat.completions.create({
+  model: "workers-ai/@cf/meta/llama-3.1-8b-instruct",
+  messages: [{ role: "user", content: "Hello!" }],
+  stream: true,
+});
+
+for await (const chunk of stream) {
+  const content = chunk.choices[0]?.delta?.content;
+  if (content) process.stdout.write(content);
+}
+```
+
+### Direct API Calls
+
+```bash
+curl -X POST https://your-worker.yourname.workers.dev/v1/chat/completions \
+  -H "Authorization: Bearer your-provider-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "workers-ai/@cf/meta/llama-3.1-8b-instruct",
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "temperature": 0.2
+  }'
+```
+
+### Supported Models
+
+- **OpenAI**: `openai/gpt-4o-mini`, `openai/gpt-4o`
+- **Workers AI**: `workers-ai/@cf/meta/llama-3.1-8b-instruct`
+- **Anthropic**: `anthropic/claude-3-haiku`
+- **Vertex AI**: `vertex/gemini-1.5-pro` (requires VERTEX_PROJECT and VERTEX_REGION)
+- **Others**: Any model supported by [AI Gateway's compat endpoint](https://developers.cloudflare.com/ai-gateway/chat-completion/)
 
