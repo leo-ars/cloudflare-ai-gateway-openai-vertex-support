@@ -89,9 +89,18 @@ curl -X POST https://your-worker.yourname.workers.dev/v1/chat/completions \
 
 ### Supported Models
 
-- **OpenAI**: `openai/gpt-4o-mini`, `openai/gpt-4o`
+- **Anthropic**: `anthropic/claude-3-haiku`, `anthropic/claude-3-5-sonnet`
+- **OpenAI**: `openai/gpt-4o-mini`, `openai/gpt-4o`, `openai/gpt-3.5-turbo`
+- **Groq**: `groq/llama-3.1-70b-versatile`, `groq/mixtral-8x7b-32768`
+- **Mistral**: `mistral/mistral-large-latest`, `mistral/mistral-small-latest`
+- **Cohere**: `cohere/command-r-plus`, `cohere/command-light`
+- **Perplexity**: `perplexity/llama-3.1-sonar-large-128k-online`
 - **Workers AI**: `workers-ai/@cf/meta/llama-3.1-8b-instruct`
-- **Anthropic**: `anthropic/claude-3-haiku`
+- **Google AI Studio**: `google-ai-studio/gemini-2.0-flash`, `google-ai-studio/gemini-1.5-pro`
+- **Grok**: `grok/grok-beta`
+- **DeepSeek**: `deepseek/deepseek-chat`
+- **Cerebras**: `cerebras/llama3.1-8b`
 - **Vertex AI**: `vertex/gemini-1.5-pro` (requires VERTEX_PROJECT and VERTEX_REGION)
-- **Others**: Any model supported by [AI Gateway's compat endpoint](https://developers.cloudflare.com/ai-gateway/chat-completion/)
+
+All models supported by [Cloudflare AI Gateway's OpenAI-compatible endpoint](https://developers.cloudflare.com/ai-gateway/chat-completion/) work with this Worker.
 
