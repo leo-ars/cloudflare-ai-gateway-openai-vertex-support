@@ -23,11 +23,16 @@ export default {
       const body = await request.json<any>();
       const model = body?.model?.trim();
       const auth = request.headers.get('authorization');
+     const cfAigAuth = request.headers.get('cf-aig-authorization');
+     if (!cfAigAuth) {
+       return Response.json({ error: { message: 'Missing cf-aig-authorization header' } }, { status: 401 });
+     }
 
       if (!model) {
         return Response.json({ error: { message: 'Missing model' } }, { status: 400 });
       }
-      if (!auth) {
+      // Only require 'authorization' if cf-aig-authorization is missing
+      if (!auth && !cfAigAuth) {
         return Response.json({ error: { message: 'Missing Authorization header' } }, { status: 401 });
       }
       if (!env.ACCOUNT_ID || !env.GATEWAY_ID) {
@@ -61,7 +66,11 @@ export default {
         
         const resp = await fetch(vertexUrl, {
           method: 'POST',
-          headers: { authorization: auth, 'content-type': 'application/json' },
+            headers: {
+              ...(auth ? { authorization: auth } : {}),
+              'content-type': 'application/json',
+              ...(cfAigAuth ? { 'cf-aig-authorization': cfAigAuth } : {})
+            },
           body: JSON.stringify(vertexPayload),
         });
 
@@ -87,7 +96,11 @@ export default {
       
       return fetch(compatUrl, {
         method: 'POST',
-        headers: { authorization: auth, 'content-type': 'application/json' },
+          headers: {
+            ...(auth ? { authorization: auth } : {}),
+            'content-type': 'application/json',
+            ...(cfAigAuth ? { 'cf-aig-authorization': cfAigAuth } : {})
+          },
         body: JSON.stringify(body),
       });
 
